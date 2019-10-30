@@ -56,4 +56,18 @@
    4.5 - Listar cliente prioritário: A partir do primeiro cliente.
    4.6 - Finalizar programa. 	 
 
+
+anotações:
+criar duas filas: inserir no final e remover no começo
+
+criar um verificador que retorna um inteiro (bool)
+na hora de escrever verificar se há clientes prioritários, escrever fila do prioritário
+
+senha: inserir na hora de adicionar
+
+verificar se existe numero repetido
+
+remover: antes de remover usar o verificador se há cliente prioritário, se houver atender ele primeiramente, senão atender cliente comum.
+
+antes de finalizar verificar se há clientes na fila, se houver será impossivel finalizar
 */
