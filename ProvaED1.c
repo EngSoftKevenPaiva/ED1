@@ -246,7 +246,7 @@ void leitura(TLista *lista){
     	if(!flag){
    		 	incluir(lista,entrada); //insere ordenado na lista
    		 	cls();
-    		printf("\n\tElemento incluído a lista.\n\n\tAperte Enter para continuar...\n");
+    		printf("\n\tElemento incluído a lista.\n\n\tAperte Enter para continuar...");
 			inseriu=1;
     	}else{
     		cls();
@@ -303,7 +303,7 @@ int main(){
             	//imprime a lista
                 imprimirLista(lista);
                 
-				printf("\n\tDigite qualquer tecla para continuar... \n");
+				printf("\n\tDigite qualquer tecla para continuar... ");
 				getch();
                 
 				break;
@@ -313,7 +313,7 @@ int main(){
             	//verifica se a lista está vazia
             	if (lista->inicio==NULL){
             		printf("\n\tA Lista está vazia!");
-					printf("\n\n\tAperte qualquer tecla para continuar...\n");
+					printf("\n\n\tAperte qualquer tecla para continuar...");
                 	getch();
 					break;
 				}
@@ -334,7 +334,7 @@ int main(){
                 if (numExistente){
                 	cls();
                 	printf("\n\tElemento já existe na lista! ");
-                	printf("\n\n\tAperte qualquer tecla para continuar...\n");
+                	printf("\n\n\tAperte qualquer tecla para continuar...");
                 	getch();
 					break;
 				}
@@ -352,7 +352,7 @@ int main(){
 				imprimirLista(lista);
 				}
 				
-				printf("\n\tAperte qualquer tecla para continuar...\n");
+				printf("\n\tAperte qualquer tecla para continuar...");
                 getch();
 				break;
 				
@@ -361,14 +361,14 @@ int main(){
 				//verifica se a lista está vazia
 				if (lista->inicio==NULL){
             		printf("\n\tA Lista está vazia!");
-					printf("\n\n\tAperte qualquer tecla para continuar...\n");
+					printf("\n\n\tAperte qualquer tecla para continuar...");
                 	getch();
 					break;
 				}
 				
 				//imprime a lista e recebe a varivel para ser removida
 				imprimirLista(lista);
-				printf("\n\tDigite valor a ser removido: ");
+				printf("\n\tDigite o valor a ser removido: ");
 				scanf("%d", &lixo);
 				
 				//verifica se o elemento a ser removido existe ou não na lista
@@ -376,18 +376,18 @@ int main(){
 				
 				if (!verificarLixo){
 					printf("\n\tElemento não existe na lista! ");
-					printf("\n\tAperte qualquer tecla para continuar...\n");
+					printf("\n\tAperte qualquer tecla para continuar...");
                 	getch();
 					break;
 				}
 				
 				//remove o elemento
 				removerElemento(lista, lixo);
-				printf("\n\tElemento removido com sucess!\n");
+				printf("\n\tElemento removido com sucesso!\n");
 				
 				//mostra a lista atual
 				imprimirLista(lista);
-				printf("\n\tAperte qualquer tecla para continuar...\n");
+				printf("\n\tAperte qualquer tecla para continuar...");
                 getch();				
 				break;
 				
@@ -395,17 +395,17 @@ int main(){
 				//verifica se a lista está vazia
 				if (lista->inicio==NULL){
             		printf("\n\tA Lista está vazia!");
-					printf("\n\n\tAperte qualquer tecla para continuar...\n");
+					printf("\n\n\tAperte qualquer tecla para continuar...");
                 	getch();
 					break;
 				}
 				
 				//pesquisa se o elemento existe ou não na lista
-				printf("\n\tDigite um valor para pesquisar: \n");
+				printf("\n\tDigite um valor para pesquisar: ");
 				scanf("%d", &procura);
 				pesquisa(lista,procura);
 				
-				printf("\n\tAperte qualquer tecla para continuar...\n");
+				printf("\n\n\tAperte qualquer tecla para continuar...");
                 getch();
 				break;
 				
@@ -413,7 +413,7 @@ int main(){
             	//apaga a lista e volta ao menu principal
                 apagarLista(lista);
                 
-                printf("\n\tAperte qualquer tecla para continuar...\n");
+                printf("\n\tAperte qualquer tecla para continuar...");
                 getch();
                 break;
             
@@ -425,7 +425,7 @@ int main(){
             default:
             	//mensagem de erro e volta ao menu principal
                 printf("\n\tDigite uma opcao valida\n");
-                printf("\n\tAperte qualquer tecla para continuar...\n");
+                printf("\n\tAperte qualquer tecla para continuar...");
                 getch();
         }
     } while(continuar);
