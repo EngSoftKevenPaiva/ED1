@@ -1,0 +1,224 @@
+#include "stdlib.h"
+#include "stdio.h"
+#include "windows.h"
+#include "locale.h"
+
+void definirIdioma(){
+ // Definir o idioma usado pelo programa
+ setlocale(LC_ALL, "Portuguese");
+}
+
+//Definindo a estrutura: Dado, apontador
+typedef struct elemento{
+	int senha;
+	struct elemento *prox;
+} TElemento;
+
+//criando a estrutura da lista de elementos contendo o apontador inicio e final
+typedef struct lista{
+  int nroElementos;
+  TElemento *inicio;
+  TElemento *final;
+} TLista;
+
+//criando a lista
+TLista *criarLista(){
+  TLista *lista = malloc(sizeof(TLista));
+  lista->nroElementos = 0;
+  lista->inicio=NULL;
+  lista->final = NULL;
+  return lista;
+}
+
+//procedimento limpar tela
+void cls(){
+	system("cls");	
+}
+
+//procedimento "aperte qualquer tecla para continuar"
+void seguir(){
+	printf("\n\n\tAperte qualquer tecla para continuar...");
+    getch();
+}
+
+void imprimirLista(TLista *lista){
+  int contador=1;
+
+	if(lista->inicio == NULL){
+		printf("\n\tFILA Vazia!\n");
+	} else {
+		TElemento *caminhador = lista->inicio;
+		printf("\n");
+		while(caminhador != NULL){
+			printf("\t[%d] - %d\n",contador, caminhador->senha);
+      contador++;
+			caminhador = caminhador->prox;
+		}
+	}
+}
+
+// inserir no final da lista
+void inserirFinal(TLista *lst, TElemento *e_novo){
+  // se lista vazia, inicio e final da lista apontam para esse novo elemento que vai ser inserido, que aponta para nulo
+  if (lst->inicio == NULL){
+    lst->inicio = e_novo;
+    lst->final = e_novo;
+    e_novo->prox = NULL;
+    lst->nroElementos = 1;
+  }else{ //se lista nao está vazia, inserir no final é simples,
+    lst->final->prox=e_novo;
+    lst->final = e_novo;
+    e_novo->prox = NULL;
+    lst->nroElementos++;
+  }
+}
+
+void removerInicio(TLista *lst) {
+  if(lst->inicio != NULL) {
+    TElemento *prim = lst->inicio;
+    TElemento *novoInicio = prim->prox;
+    free(prim);
+    lst->inicio = novoInicio;
+    lst->nroElementos--;
+    if(lst->inicio == NULL) lst->final = NULL;
+  }
+}
+
+////////////////// IMPLEMENTAÇÃI FILA
+//criando o tipo fila
+typedef struct fila{
+  int tamanho;
+  TLista *lista;
+}TFila;
+
+//alocando espaco na memoria para a fila prioritaria
+TFila *criarFila(){
+  TFila *fila = malloc(sizeof(TFila));
+  fila->tamanho=0;
+  fila->lista = criarLista();
+
+  return fila;
+}
+
+int isEmpty(TFila *fila){
+  if(fila->lista->inicio==NULL)
+    return 0;
+  else
+    return 1;
+}
+
+int enfileirar(TFila *fila, TElemento *cliente){
+  inserirFinal(fila->lista, cliente);
+  fila->tamanho++;
+  
+  return fila->tamanho;
+}
+
+void atender(TFila *fila){
+  removerInicio(fila->lista);
+  fila->tamanho--;
+}
+
+//mostrar monitor principal
+void monitorPrincipal(){
+	printf("\t---------------------MENU---------------------\n\n");
+	printf("\t	[1] Cliente prioritário\n");
+	printf("\t	[2] Cliente comum\n");
+	printf("\t	[3] Atender Cliente \n");
+	printf("\t	[4] Listar cliente comum\n");
+	printf("\t	[5] Listar cliente prioritário\n");
+	printf("\t	[6] Fechar banco\n");
+	printf("\t----------------------------------------------\n");
+}
+
+
+int main(){
+  TFila *filaPrioritaria = criarFila();
+  TFila *filaComum = criarFila();
+  int contSenha=1;
+  int continuar=1;
+
+  TElemento *cliente = malloc(sizeof(TElemento));
+  
+  
+  do{
+  	cls();
+	definirIdioma();
+    monitorPrincipal();
+    printf("\n\tEscolha uma opção: ");
+    scanf("%d", &continuar);
+    switch(continuar){
+      case 1:
+        cliente = malloc(sizeof(TElemento));
+        cliente->senha = contSenha;
+        contSenha++;
+        enfileirar(filaPrioritaria, cliente);
+        break;
+        
+        
+      case 2:
+        cliente = malloc(sizeof(TElemento));
+        cliente->senha = contSenha;
+        contSenha++;
+        enfileirar(filaComum, cliente);
+        break;
+
+
+      case 3:
+        if(isEmpty(filaPrioritaria)){
+          atender(filaPrioritaria);
+          break;
+        }
+        else{
+          if(isEmpty(filaComum))
+            atender(filaComum);
+          else{
+            printf("\n\tFila vazia, aguarde um cliente.\n");
+			seguir();
+			}
+        }
+        break;
+      
+
+      case 4:
+      	cls();
+        if(isEmpty(filaComum))
+          imprimirLista(filaComum->lista);
+        else
+          printf("\n\tSem clientes comuns.\n");
+          
+        seguir();
+        
+        break;
+
+
+      case 5:
+      	cls();
+        if(isEmpty(filaPrioritaria))
+          imprimirLista(filaPrioritaria->lista);
+        else 
+          printf("\n\tSem Clientes prioritarios.\n");
+        
+        seguir();
+        
+		break;		
+		
+		
+      case 6:
+      	cls();
+        if (!isEmpty(filaComum) && !isEmpty(filaPrioritaria))
+          return 0;
+        else
+          printf("\n\timpossivel fechar, ainda há clientes a serem atendidos\n");
+          
+        seguir();
+        break;
+      
+	  
+	  default:
+	  	cls();
+        printf("\n\tOpção Inválida escolha outra.\n");
+        seguir();
+    }
+  }while(continuar);
+}
