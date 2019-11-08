@@ -1,0 +1,160 @@
+#include "stdlib.h"
+#include "stdio.h"
+#include "locale.h"
+#include "windows.h"
+
+void definirIdioma(){
+ // Definir o idioma usado pelo programa
+ setlocale(LC_ALL, "Portuguese");
+}
+
+typedef struct elemento{
+	int dado;
+	struct elemento *prox;
+} TElemento;
+
+//criando a estrutura da lista de elementos contendo o apontador inicio e final
+typedef struct pilha{
+  int altura;
+  TElemento *inicio;
+  TElemento *final;
+} TPilha;
+
+//criando a lista
+TPilha *criarPilha(){
+  TPilha *pilha = malloc(sizeof(TPilha));
+  pilha->altura = 0;
+  pilha->inicio=NULL;
+  pilha->final = NULL;
+  return pilha;
+}
+
+
+//procedimento limpar tela
+void cls(){
+	system("cls");	
+}
+
+//procedimento "aperte qualquer tecla para continuar"
+void seguir(){
+	printf("\n\n\tAperte qualquer tecla para continuar...");
+    getch();
+}
+
+void imprimirPilha(TPilha *pilha){
+  TElemento *ponteiro = pilha->inicio;
+  int contador=pilha->altura-1;
+	if(pilha->inicio == NULL){
+		printf("\n\tPilha Vazia!\n");
+	} else {
+		
+		printf("\n\t   Altura - Dado");
+     	while (ponteiro) {
+           printf("\n\t\t%d - %d",contador,ponteiro->dado);
+           contador--;
+           ponteiro = ponteiro->prox;
+          }
+     }	
+}
+
+void empilhar(TPilha *pilha, TElemento *e_novo){
+  // lista vazia
+  if (pilha->inicio == NULL){
+    pilha->inicio = e_novo;
+    pilha->final = e_novo;
+    e_novo->prox = NULL;
+    pilha->altura = 1;
+  }
+  //lista com elementos
+  else{
+    TElemento *ant = pilha->inicio;
+    pilha->inicio = e_novo;
+    e_novo->prox = ant;
+    pilha->altura++;
+  }
+}
+
+void desempilhar(TPilha *pilha) {
+	if(pilha->inicio != NULL) {
+    	//vai até o primeiro elemento da lista
+    	TElemento *primeiroElemento = pilha->inicio;
+    	TElemento *novoInicio = primeiroElemento->prox;
+    	free(primeiroElemento);
+
+    	pilha->inicio = novoInicio;
+    	pilha->altura--;
+}
+    else{
+		pilha->final = NULL;
+    	printf("\n\tPilha vazia! \n");
+  }
+}
+
+//limpar toda a pilha
+void limparPilha(TPilha *pilha){
+	TElemento *inicio = pilha->inicio;
+	
+	if (pilha->inicio==NULL)
+		printf("\n\tNão há elementos na pilha\n");
+	else{
+		while(inicio!=NULL){
+    		desempilhar(pilha);
+    		inicio = inicio->prox;
+    }
+	printf("\n\tPilha limpa\n");
+  }
+}
+
+void monitorPrincipal(){
+	printf("\t---------------------MENU---------------------\n\n");
+	printf("\t	[1] empilhar elemento\n");
+	printf("\t	[2] mostrar pilha\n");
+	printf("\t	[3] desempilhar\n");
+	printf("\t	[4] sair\n");
+	printf("\t----------------------------------------------\n");
+}
+
+int main(){
+  definirIdioma();
+
+  //cria a lista inicialmente vazia
+	TPilha *pilha = criarPilha(); 
+  TElemento *elemento = malloc(sizeof(TElemento));
+  //variavel de controle
+  int valor, continuar = 1;
+
+  do{
+  	cls();
+    monitorPrincipal();
+    printf("\n\tEscolha uma opção: ");
+    scanf("%d", &continuar);
+    switch(continuar){
+      case 1:
+        printf("\n\tDigite o valor para ser empilhado: ");
+        scanf("%d", &(elemento->dado));
+        empilhar(pilha, elemento);
+        elemento = malloc(sizeof(TElemento));    
+        break;
+      case 2:
+      	cls();
+        imprimirPilha(pilha);
+        seguir();
+        break;
+        
+      case 3:
+        desempilhar(pilha);
+        seguir();
+        break;
+      
+      case 4:
+        limparPilha(pilha);
+        return 0;
+      
+      default:
+        //mensagem de erro e volta ao menu principal
+        printf("\n\tDigite uma opcao valida\n");
+        seguir();
+        break;
+    }
+  }while(continuar);
+}
