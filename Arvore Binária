@@ -1,0 +1,421 @@
+/*
+Atividade arvore binaria
+por: Keven Paiva
+Docente: Benevaldo
+Estrutura de dados 1
+IFAM - CMZL
+*/
+
+#include <stdio.h> 
+#include <stdlib.h> 
+#include <conio.h> 
+#include <windows.h> 
+
+#define dgetchar() getchar();getchar();
+
+#include "locale.h"
+
+void definirIdioma(){
+ // Definir o idioma usado pelo programa
+ setlocale(LC_ALL, "Portuguese");
+}
+
+
+// Define a estrutura de um NO da árvore
+struct arvore
+{
+   int info;                  // Representa a informação do NO
+   struct arvore *esquerda;   // Representa a subárvore esquerda da árvore.
+   struct arvore *direita;    // Representa a subárvore direita  da árvore. 
+};
+ 
+
+// Auzilia na identificação da ordem de
+// exibição dos elementos da árvore
+// conforme a técnica: EmOrdem, PreOrdem e PosOrdem 
+int ordemElemento;  
+
+int linha;
+ 
+// Posiciona uma mensagem na coluna e linha especificada
+void gotoxy(int coluna, int linha);
+
+// Exibi o Menu Principal
+void menuPrincipal();
+
+// Procedimento para exibir o conteúdo do NO 
+// da árvore binaria
+void imprimirNo(int c, int b); 
+
+// Procedimento para navegar toda a árvore binária Em Orde, Pre Ordem e Pos ordem
+void imprimirArvoreEmOrdem(struct arvore *x, int b);
+
+void imprimirArvorePreOrdem(struct arvore *x, int b);
+
+void imprimirArvorePosOrdem(struct arvore *x, int b);
+
+// Inserir 
+struct arvore *inserir(struct arvore *r, int info);
+
+// Funçao para deletar um determinado elemento da árvore binária
+struct arvore *deletar(struct arvore *raiz, int elemento);
+
+// Procura um elemento na árvore
+struct arvore *procurar_arvore(struct arvore *raiz, int elemento);
+
+//Procedimento para remover um elemento da árvore binária
+void retirar();
+
+// Declaração da variável raiz do tipo árvore
+struct arvore *raiz;
+
+struct arvore *noProcura;
+
+// Programa Principal
+int main()
+{
+	definirIdioma();
+ //inicializar a raiz   
+ raiz=NULL; 
+     
+   // Repetição Infinita
+   for (;;)
+   {
+      menuPrincipal();      
+   } 
+      
+   return 0;        
+  
+}
+
+
+
+// Procedimento para exibir o Menu Principal
+void menuPrincipal()
+{
+      int op;
+      int elemento;
+      
+      // Limpa a tela.
+      system("cls"); 
+      
+      // Alterar a cor do fundo da tela e a cor da fonte.
+      system("color A"); 
+           
+      gotoxy(10,2);
+      printf("Programa Exemplo de Arvore Binaria");
+      
+      gotoxy(20,5);
+      printf("Menu Principal");
+              
+      gotoxy(20,7);     
+      printf("[1] - Inserir Elemento"); 
+      
+      gotoxy(20,8);     
+      printf("[2] - Listar todos Elementos em Ordem");
+      
+      gotoxy(20,9);     
+      printf("[3] - Listar todos Elementos em Pré Ordem ");
+      
+      gotoxy(20,10);     
+      printf("[4] - Listar todos Elementos em Pós Ordem");
+      
+      gotoxy(20,11);     
+      printf("[5] - Pesquisar Elemento");     
+      
+      gotoxy(20,12);     
+      printf("[6] - Remover Elemento");     
+      
+      gotoxy(20,13);
+      printf("[7] - Sair");
+      
+      gotoxy(20,15); 
+      printf("Sua opcao: ");
+      scanf("%d",&op);
+      
+      
+      switch(op){
+         case 1 : 
+              
+              getchar();   
+              printf("\t\nDigite o Elemento: ");
+              scanf("%d",&elemento);
+              raiz = inserir(raiz,elemento);
+              break;
+              
+         case 2 :
+              // Limpa a tela.
+              system("cls"); 
+              ordemElemento = 1;
+              linha = 10;
+              gotoxy(30,01);
+              printf("Listar Todos Elementos em Ordem.\n");
+              imprimirArvoreEmOrdem(raiz,4);
+              gotoxy(20,23);
+              printf("Pressione uma tecla.");
+              dgetchar();
+            break; 
+
+         case 3 :
+              // Limpa a tela.
+              system("cls"); 
+              ordemElemento = 1;
+              linha = 10;
+              gotoxy(30,01);
+              printf("Listar Todos Elementos em Pré Ordem.\n");
+              imprimirArvorePreOrdem(raiz,4);
+              gotoxy(20,23);
+              printf("Pressione uma tecla.");
+              dgetchar();
+            break; 
+
+         case 4 :
+              // Limpa a tela.
+              system("cls"); 
+              ordemElemento = 1;
+              linha = 10;
+              gotoxy(30,01);
+              printf("Listar Todos Elementos em Pós Ordem.\n");
+              imprimirArvorePosOrdem(raiz,4);
+              gotoxy(20,23);
+              printf("Pressione uma tecla.");
+              dgetchar();
+            break; 
+
+         case 5 : 
+            getchar();  
+            printf("\t\nDigite o Elemento:");
+            scanf("%d",&elemento);
+            noProcura = procurar_arvore(raiz,elemento);
+            if (noProcura)//faz o procurar do no
+              { printf("\tElemento encontrado: %d\n",noProcura->info);}
+            else
+             { printf("\t\nElemento nao foi encontrado..."); }
+       
+       
+              gotoxy(20,23);
+              printf("Pressione uma tecla.");
+              dgetchar();
+            break; 
+
+         case 6 : 
+              retirar();      
+              
+              gotoxy(20,23);
+              printf("Pressione uma tecla.");
+              dgetchar();
+              
+              break; 
+
+         
+         case 7 :
+            // Finaliza o programa   
+            exit(0);
+            break;  
+            
+         default: 
+            printf("\n\t\tOpção Errada\n");
+            printf("\n\t\tPressione uma tecla.");
+            dgetchar();
+       }
+}
+
+
+// Procedimento para exibir o conteúdo do NO da árvore binaria
+void imprimirNo(int c, int b) {
+    int i;
+    for (i = 0; i < b; i++)
+     { gotoxy(i,linha);
+	   printf("----"); 
+	 }
+     
+    // Ordem de exibição do elemento da árvore 
+    gotoxy(b,linha);
+    printf("%d: ", ordemElemento);
+	
+	gotoxy(b+1, linha);
+	// Elemento da árvore  
+    printf("(%d)\n", c);
+    
+    ordemElemento++;
+    linha--;
+}
+
+// Procedimento para navegar toda a árvore binária 
+void imprimirArvoreEmOrdem(struct arvore *x, int b) {
+      
+    if (x == NULL) {
+        return;
+    }
+    
+    // Imprimir árvore: Em ordem 
+    imprimirArvoreEmOrdem(x->esquerda, b+4);
+    imprimirNo(x->info, b);
+    imprimirArvoreEmOrdem(x->direita, b+4);   
+    
+}
+
+// Procedimento para navegar toda a árvore binária 
+void imprimirArvorePreOrdem(struct arvore *x, int b) {
+      
+    if (x == NULL) {
+        return;
+    }
+    
+    // Imprimir árvore: Em ordem 
+    imprimirNo(x->info, b);
+    imprimirArvorePreOrdem(x->esquerda, b+4);
+    imprimirArvorePreOrdem(x->direita, b+4);   
+    
+}
+
+// Procedimento para navegar toda a árvore binária 
+void imprimirArvorePosOrdem(struct arvore *x, int b) {
+      
+    if (x == NULL) {
+        return;
+    }
+    
+    // Imprimir árvore: Em ordem 
+    imprimirArvorePosOrdem(x->esquerda, b+4);
+    imprimirArvorePosOrdem(x->direita, b+4);   
+    imprimirNo(x->info, b);
+    
+}
+
+struct arvore *inserir(struct arvore *r, int info)
+{
+  if ( r == NULL){
+     r=(struct arvore*)malloc(sizeof(struct arvore));
+     if(!r) {
+     printf("Falta de memoria");
+       exit(0);
+     }
+     r->esquerda=NULL;
+     r->direita=NULL;
+     r->info=info;
+  }else if (info < r->info){
+  	r->esquerda = inserir(r->esquerda,info);
+  }else{
+  	r->direita = inserir(r->direita,info);
+  } 
+  
+  return r;
+}
+
+// Funçao para deletar um determinado elemento da árvore binária
+struct arvore *deletar(struct arvore *raiz, int elemento)
+{
+ struct arvore *p,*p2;
+ 
+ if(!raiz) 
+   { printf("\t\nArvore esta vazia...\n");
+     return raiz;
+   }         // árvore está vazia
+    
+ // Deletar a raiz, significa uma arvore vazia   
+ if( raiz->info == elemento) 
+  {
+    if (raiz->esquerda == raiz->direita)
+     {
+      free(raiz);
+      return NULL;
+     }
+    //ou se um filho e nulo
+    else if(raiz->esquerda==NULL)
+     {
+      p=raiz->direita;
+      free(raiz);
+      return p;
+     }
+  else if(raiz->direita==NULL)
+     {
+       p=raiz->esquerda;
+       free(raiz);
+       return p;
+     }
+
+  //Ou se existem dois filhos
+  else
+   {
+    p2=raiz->direita;
+    p=raiz->direita;
+    while(p->esquerda)
+     p=p->esquerda;
+     p->esquerda = raiz->esquerda;
+     free(raiz);
+     return p2;
+   }
+  }
+
+ if(raiz->info < elemento)
+   raiz->direita = deletar(raiz->direita,elemento);
+ else 
+   raiz->esquerda = deletar(raiz->esquerda,elemento);
+ return raiz;
+
+}
+ 
+
+//Função para pesquisa na árvore binária
+struct arvore *procurar_arvore(struct arvore *raiz, int elemento)
+{
+  if(!raiz)
+   { 
+     printf("\t\nArvore esta vazia...\n");      
+     return raiz; //arvore vazia
+   }
+
+  while(raiz->info!=elemento)
+   {
+     if(elemento<raiz->info)
+       raiz=raiz->esquerda;
+     else raiz = raiz->direita;
+     
+     if(raiz==NULL)
+	    break;
+     
+    }
+    
+return raiz;
+
+}
+ 
+//Procedimento para remover um elemento da árvore binária
+void retirar(){
+  int a;
+  
+  // Arvore vazia
+  if(!raiz)
+  { 
+     printf("\t\nArvore esta vazia...\n");      
+     
+  }
+  else
+  {   
+    getchar();
+    printf("\t\nDigite um elemento para retirar: ");
+    scanf("%d",&a);
+
+   if (procurar_arvore(raiz,a))//faz o procurar do no
+     {
+      printf("\tElento encontrado...\n");
+      raiz = deletar(raiz,a);     //retira o no
+      printf("\tElemento retirado...\n");
+     }
+    else
+     {
+      printf("\t\nElemento nao foi encontrado: %d",a);
+     }
+    
+  }
+}
+
+// Função para posicionar na coordenada X,Y
+// (Coluna(X),Linha(Y)) da tela.
+void gotoxy(int coluna, int linha)
+{
+    COORD point;
+    point.X = coluna; point.Y = linha;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), point);
+}
